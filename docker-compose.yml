@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  proxy:
+    build: proxy
+    ports:
+      - 8000:4180
+    environment:
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:4180
+      OAUTH2_PROXY_PROVIDER: google
+      OAUTH2_PROXY_CLIENT_ID: {hoge}
+      OAUTH2_PROXY_CLIENT_SECRET: {secret}
+      OAUTH2_PROXY_EMAIL_DOMAINS: indigotail.net
+      OAUTH2_PROXY_UPSTREAMS: http://web/
+      OAUTH2_PROXY_COOKIE_SECRET: Tg06aGvkpWU2S_sryFWGYg==
+      OAUTH2_PROXY_SESSION_STORE_TYPE: redis
+      OAUTH2_PROXY_REDIS_CONNECTION_URL: redis://redis/
+      # 以下、HTTPS ではなく HTTP で動かすための設定
+      OAUTH2_PROXY_COOKIE_SECURE: 'true'
+      OAUTH2_PROXY_REDIRECT_URL: https://seat.indigotail.net/oauth2/callback
+
+  web:
+    build: web
+
+  redis:
+    image: redis
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
